@@ -7,6 +7,7 @@ MOVE_INCREMENT = 20
 MOVES_PER_SECOND = 15
 GAME_SPEED = 1000 // MOVES_PER_SECOND
 
+
 class Snake(tk.Canvas):
     def __init__(self):
         super().__init__(
@@ -48,22 +49,24 @@ class Snake(tk.Canvas):
             )
 
         self.create_image(*self.food_position, image=self.food, tag="food")
-    
+
     def check_collisions(self):
         head_x_position, head_y_position = self.snake_positions[0]
 
         return (
-            head_x_position in (0, 600) or
-            head_y_position in (20, 620) or
-            (head_x_position, head_y_position) in self.snake_positions[1:]
+            head_x_position in (0, 600)
+            or head_y_position in (20, 620)
+            or (head_x_position, head_y_position) in self.snake_positions[1:]
         )
-    
+
     def check_food_collision(self):
         if self.snake_positions[0] == self.food_position:
             self.score += 1
             self.snake_positions.append(self.snake_positions[-1])
-            
-            self.create_image(*self.snake_positions[-1], image=self.snake_body, tag="snake")
+
+            self.create_image(
+                *self.snake_positions[-1], image=self.snake_body, tag="snake"
+            )
             self.food_position = self.set_new_food_position()
             self.coords(self.find_withtag("food"), *self.food_position)
 
@@ -76,12 +79,12 @@ class Snake(tk.Canvas):
             self.winfo_width() / 2,
             self.winfo_height() / 2,
             text=f"Game over! You scored {self.score}!",
-            fill="#fff"
+            fill="#fff",
         )
 
     def move_snake(self):
         head_x_position, head_y_position = self.snake_positions[0]
-        
+
         if self.direction == "Left":
             new_head_position = (head_x_position - MOVE_INCREMENT, head_y_position)
         elif self.direction == "Right":
@@ -91,7 +94,6 @@ class Snake(tk.Canvas):
         elif self.direction == "Up":
             new_head_position = (head_x_position, head_y_position - MOVE_INCREMENT)
 
-            
         self.snake_positions = [new_head_position] + self.snake_positions[:-1]
 
         for segment, position in zip(self.find_withtag("snake"), self.snake_positions):
@@ -99,9 +101,14 @@ class Snake(tk.Canvas):
 
     def on_key_press(self, e):
         new_direction = e.keysym
+
         all_directions = ("Up", "Down", "Left", "Right")
-        opposites = {"Up": "Down", "Down": "Up", "Left": "Right", "Right": "Left"}
-        if new_direction in all_directions and new_direction != opposites[self.direction]:
+        opposites = ({"Up", "Down"}, {"Left", "Right"})
+
+        if (
+            new_direction in all_directions
+            and {new_direction, self.direction} not in opposites
+        ):
             self.direction = new_direction
 
     def perform_actions(self):
