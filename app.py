@@ -17,8 +17,8 @@ class Snake(tk.Canvas):
 
         self.score = 0
 
-        self.loadAssets()
-        self.createObjects()
+        self.load_assets()
+        self.create_objects()
 
         self.bind_all("<Key>", self.on_key_press)
 
@@ -26,7 +26,7 @@ class Snake(tk.Canvas):
 
         self.after(50, self.perform_actions)
 
-    def loadAssets(self):
+    def load_assets(self):
         try:
             self.snake_body_image = Image.open("./assets/snake.png")
             self.snake_body = ImageTk.PhotoImage(self.snake_body_image)
@@ -37,7 +37,7 @@ class Snake(tk.Canvas):
             print(error)
             root.destroy()
 
-    def createObjects(self):
+    def create_objects(self):
         self.create_text(30, 10, text=f"Score: {self.score}", tag="score", fill="#fff")
 
         for x_position, y_position in self.snake_positions:
@@ -50,10 +50,11 @@ class Snake(tk.Canvas):
     def check_collisions(self):
         head_x_position, head_y_position = self.snake_positions[0]
 
-        if head_x_position in (0, 600) or head_y_position in (20, 620):
-            return True
-        elif (head_x_position, head_y_position) in self.snake_positions[1:]:
-            return True
+        return (
+            head_x_position in (0, 600) or
+            head_y_position in (20, 620) or
+            (head_x_position, head_y_position) in self.snake_positions[1:]
+        )
     
     def check_food_collision(self):
         if self.snake_positions[0] == self.food_position:
@@ -95,8 +96,11 @@ class Snake(tk.Canvas):
             self.coords(segment, position)
 
     def on_key_press(self, e):
-        if e.keysym in ("Up", "Down", "Left", "Right"):
-            self.direction = e.keysym
+        new_direction = e.keysym
+        all_directions = ("Up", "Down", "Left", "Right")
+        opposites = {"Up": "Down", "Down": "Up", "Left": "Right", "Right": "Left"}
+        if new_direction in all_directions and new_direction != opposites[self.direction]:
+            self.direction = new_direction
 
     def perform_actions(self):
         if self.check_collisions():
