@@ -1,7 +1,7 @@
 import tkinter as tk
 from random import randint
 from PIL import Image, ImageTk
-import time
+
 
 MOVE_INCREMENT = 20
 MOVES_PER_SECOND = 15
@@ -41,7 +41,9 @@ class Snake(tk.Canvas):
             root.destroy()
 
     def create_objects(self):
-        self.create_text(30, 10, text=f"Score: {self.score}", tag="score", fill="#fff")
+        self.create_text(
+            35, 12, text=f"Score: {self.score}", tag="score", fill="#fff", font=("", 10)
+        )
 
         for x_position, y_position in self.snake_positions:
             self.create_image(
@@ -49,6 +51,7 @@ class Snake(tk.Canvas):
             )
 
         self.create_image(*self.food_position, image=self.food, tag="food")
+        self.create_rectangle(7, 27, 593, 613, outline="#525d69")
 
     def check_collisions(self):
         head_x_position, head_y_position = self.snake_positions[0]
@@ -80,6 +83,7 @@ class Snake(tk.Canvas):
             self.winfo_height() / 2,
             text=f"Game over! You scored {self.score}!",
             fill="#fff",
+            font=("", 14)
         )
 
     def move_snake(self):
@@ -133,6 +137,7 @@ class Snake(tk.Canvas):
 root = tk.Tk()
 root.title("Snake")
 root.resizable(False, False)
+root.tk.call("tk", "scaling", 4.0)
 
 board = Snake()
 
