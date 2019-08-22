@@ -123,6 +123,7 @@ class Snake(tk.Canvas):
 
 root = tk.Tk()
 root.title("Snake")
+root.resizable(False, False)
 
 board = Snake()
 
