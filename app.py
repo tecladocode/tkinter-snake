@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 import time
 
 MOVE_INCREMENT = 20
+MOVES_PER_MINUTE = 1000 / 20
 
 class Snake(tk.Canvas):
     def __init__(self):
@@ -24,7 +25,7 @@ class Snake(tk.Canvas):
 
         self.pack()
 
-        self.after(50, self.perform_actions)
+        self.after(MOVES_PER_MINUTE, self.perform_actions)
 
     def load_assets(self):
         try:
@@ -109,7 +110,7 @@ class Snake(tk.Canvas):
         self.check_food_collision()
         self.move_snake()
 
-        self.after(50, self.perform_actions)
+        self.after(MOVES_PER_MINUTE, self.perform_actions)
 
     def set_new_food_position(self):
         while True:
