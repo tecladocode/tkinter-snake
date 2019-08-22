@@ -4,8 +4,8 @@ from PIL import Image, ImageTk
 import time
 
 MOVE_INCREMENT = 20
-MOVES_PER_MINUTE = 15
-GAME_SPEED = 1000 // MOVES_PER_MINUTE
+MOVES_PER_SECOND = 15
+GAME_SPEED = 1000 // MOVES_PER_SECOND
 
 class Snake(tk.Canvas):
     def __init__(self):
