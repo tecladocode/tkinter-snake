@@ -4,7 +4,7 @@ from PIL import Image, ImageTk
 import time
 
 MOVE_INCREMENT = 20
-MOVES_PER_MINUTE = 1000 / 20
+MOVES_PER_MINUTE = 1000 // 20
 
 class Snake(tk.Canvas):
     def __init__(self):
