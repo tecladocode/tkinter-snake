@@ -42,7 +42,7 @@ class Snake(tk.Canvas):
 
     def create_objects(self):
         self.create_text(
-            35, 12, text=f"Score: {self.score}", tag="score", fill="#fff", font=("", 10)
+            35, 12, text=f"Score: {self.score}", tag="score", fill="#fff", font=10
         )
 
         for x_position, y_position in self.snake_positions:
@@ -83,7 +83,7 @@ class Snake(tk.Canvas):
             self.winfo_height() / 2,
             text=f"Game over! You scored {self.score}!",
             fill="#fff",
-            font=("", 14)
+            font=14
         )
 
     def move_snake(self):
