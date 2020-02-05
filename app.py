@@ -37,8 +37,8 @@ class Snake(tk.Canvas):
             self.food_image = Image.open("./assets/food.png")
             self.food = ImageTk.PhotoImage(self.food_image)
         except IOError as error:
-            print(error)
             root.destroy()
+            raise
 
     def create_objects(self):
         self.create_text(
