@@ -1,11 +1,13 @@
 import tkinter as tk
 from random import randint
 from PIL import Image, ImageTk
+from tkinter import ttk
+
 
 
 MOVE_INCREMENT = 20
-MOVES_PER_SECOND = 15
-GAME_SPEED = 1000 // MOVES_PER_SECOND
+moves_per_second = 15
+GAME_SPEED = 1000 // moves_per_second
 
 
 class Snake(tk.Canvas):
@@ -27,7 +29,7 @@ class Snake(tk.Canvas):
 
         self.pack()
 
-        self.after(GAME_SPEED, self.perform_actions)
+        self.perform_actions_timer = self.after(GAME_SPEED, self.perform_actions)
 
     def load_assets(self):
         try:
@@ -42,8 +44,8 @@ class Snake(tk.Canvas):
 
     def create_objects(self):
         self.create_text(
-            35, 12, text=f"Score: {self.score}", tag="score", fill="#fff", font=10
-        )
+            100, 12, text=f"Score: {self.score} (speed: {moves_per_second})",
+            tag="score", fill="#fff", font=10)
 
         for x_position, y_position in self.snake_positions:
             self.create_image(
@@ -67,6 +69,10 @@ class Snake(tk.Canvas):
             self.score += 1
             self.snake_positions.append(self.snake_positions[-1])
 
+            if self.score % 5 == 0:
+                global moves_per_second
+                moves_per_second += 1
+
             self.create_image(
                 *self.snake_positions[-1], image=self.snake_body, tag="snake"
             )
@@ -74,9 +80,10 @@ class Snake(tk.Canvas):
             self.coords(self.find_withtag("food"), *self.food_position)
 
             score = self.find_withtag("score")
-            self.itemconfigure(score, text=f"Score: {self.score}", tag="score")
+            self.itemconfigure(score, text=f"Score: {self.score} (speed: {moves_per_second})", tag="score")
 
     def end_game(self):
+        self.after_cancel(self.perform_actions_timer)
         self.delete(tk.ALL)
         self.create_text(
             self.winfo_width() / 2,
@@ -85,6 +92,23 @@ class Snake(tk.Canvas):
             fill="#fff",
             font=14
         )
+
+        def reset():
+            play_button.destroy()
+            quit_button.destroy()
+            start_game()
+
+        play_button = ttk.Button(
+            text="Play again",
+            command=reset
+        )
+        play_button.pack()
+
+        quit_button = ttk.Button(
+            text="Quit",
+            command=self.quit,
+        )
+        quit_button.pack()
 
     def move_snake(self):
         head_x_position, head_y_position = self.snake_positions[0]
@@ -134,11 +158,21 @@ class Snake(tk.Canvas):
                 return food_position
 
 
+board = None
+
+
+def start_game():
+    global board
+    if board:
+        board.destroy()
+    board = Snake()
+
+
 root = tk.Tk()
 root.title("Snake")
 root.resizable(False, False)
 root.tk.call("tk", "scaling", 4.0)
 
-board = Snake()
+start_game()
 
 root.mainloop()
